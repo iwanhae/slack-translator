@@ -8,6 +8,7 @@
       "npm:@slack/logger": "npm:@slack/logger@4.0.0",
       "npm:@slack/socket-mode": "npm:@slack/socket-mode@2.0.1",
       "npm:@slack/socket-mode@^2.0.1": "npm:@slack/socket-mode@2.0.1",
+      "npm:@slack/web-api": "npm:@slack/web-api@7.5.0",
       "npm:@types/node": "npm:@types/node@18.16.19",
       "npm:eventemitter3@^5.0.1": "npm:eventemitter3@5.0.1",
       "npm:ollama": "npm:ollama@0.5.9",
@@ -203,6 +204,9 @@
       }
     }
   },
+  "redirects": {
+    "https://esm.sh/franc@6": "https://esm.sh/franc@6.2.0"
+  },
   "remote": {
     "https://deno.land/std@0.182.0/http/http_errors.ts": "b9a18ef97d6c5966964de95e04d1f9f88a0f8bd8577c26fd402d9d632fb03a42",
     "https://deno.land/std@0.182.0/http/http_status.ts": "8a7bcfe3ac025199ad804075385e57f63d055b2aed539d943ccc277616d6f932",
@@ -331,7 +335,14 @@
     "https://deno.land/x/deno_slack_api@2.8.0/typed-method-types/workflows/triggers/trigger-event-types.ts": "e2c315e208d8b8d076282ed292b213a1d555e99217000f0988ce8225e98c5296",
     "https://deno.land/x/deno_slack_api@2.8.0/typed-method-types/workflows/triggers/trigger-filter.ts": "db0583587e893b9dd4e30e1e413c5b177ac032c9053510bcdbd3d099b23130b6",
     "https://deno.land/x/deno_slack_api@2.8.0/typed-method-types/workflows/triggers/webhook.ts": "eda0d5dffa7bd987d4d1134ba3f96508caaf1675a70049ac89aaa41e77c40007",
-    "https://deno.land/x/deno_slack_api@2.8.0/types.ts": "092319fbe26d5e26b7289c3a3efcbf8c5be7f3e69727a0ee09808503f0719026"
+    "https://deno.land/x/deno_slack_api@2.8.0/types.ts": "092319fbe26d5e26b7289c3a3efcbf8c5be7f3e69727a0ee09808503f0719026",
+    "https://esm.sh/franc@6.2.0": "5f7a5b3443018077e28ae37b0f33968b26a2615dca0fc87ba8a3afec6c22c801",
+    "https://esm.sh/v135/collapse-white-space@2.1.0/denonext/collapse-white-space.mjs": "f9413c2273567b627ded33e389b26ec20249af2337e51933f7c459a3bb4c875c",
+    "https://esm.sh/v135/franc@6.2.0/denonext/franc.mjs": "130435f1142c460aa1176660e60a3cd59e6480b850a7312e09a9308350b47654",
+    "https://esm.sh/v135/franc@6.2.0/denonext/index.js": "a31d0ae9bbac7e8e8bc7b555965a3e1c037eac9639fec3930af7e8818363a7bd",
+    "https://esm.sh/v135/franc@6.2.0/index.js": "255a6d749a975bc09a356bcd0d29ede2993bb1f7f41d3d8230cfd4f3125a2662",
+    "https://esm.sh/v135/n-gram@2.0.2/denonext/n-gram.mjs": "e4c198a0a6d22b715b3910fa4925a6cd66c26b5901012eae901681b82977b1a8",
+    "https://esm.sh/v135/trigram-utils@2.0.1/denonext/trigram-utils.mjs": "26760634968ba4138382a2d53d6aa80bd1005104af94c8645b607aa4257b38d1"
   },
   "workspace": {
     "dependencies": [

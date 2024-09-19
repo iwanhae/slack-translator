@@ -2,6 +2,8 @@ import "jsr:@std/dotenv/load";
 import { SocketModeClient } from "npm:@slack/socket-mode";
 import { LogLevel } from "npm:@slack/logger";
 import { chat } from "./ollama.ts";
+import { WebClient } from "npm:@slack/web-api";
+import { shouldTranslate, stripSlackFormatting } from "./utils.ts";
 
 const SYSTEM_PROMPT = Deno.readTextFileSync("./prompt.txt");
 
@@ -11,6 +13,7 @@ interface Message {
     text: string;
     user: string;
     ts: string;
+    thread_ts?: string;
 }
 
 function getEnvOrThrow(key: string): string {
@@ -23,15 +26,40 @@ function getEnvOrThrow(key: string): string {
 
 const slackAppToken = getEnvOrThrow("SLACK_APP_TOKEN");
 const slackBotToken = getEnvOrThrow("SLACK_BOT_TOKEN");
+const webClient = new WebClient(slackBotToken);
 
 async function handleMessage(message: Message) {
-    // TODO: reply to the message with translated message
-    // if message is a thread, reply to the thread
-    // if message is not a thread, create a new thread and reply to the thread
+    const text = stripSlackFormatting(message.text);
+    if (!shouldTranslate(text)) {
+        return;
+    }
 
-    console.log(message);
-    const translation = await chat(SYSTEM_PROMPT, message.text);
-    console.log(translation);
+    console.log("Received message:", text);
+    const translation = await chat(SYSTEM_PROMPT, text);
+    console.log("Translation:", translation);
+
+    try {
+        if (message.thread_ts) {
+            // Reply to the existing thread
+            await webClient.chat.postMessage({
+                channel: message.channel,
+                thread_ts: message.thread_ts,
+                text: translation,
+                mrkdwn: true,
+            });
+        } else {
+            // Create a new thread with the translation
+            await webClient.chat.postMessage({
+                channel: message.channel,
+                thread_ts: message.ts,
+                text: translation,
+                mrkdwn: true,
+            });
+        }
+        console.log("Reply sent successfully");
+    } catch (error) {
+        console.error("Error sending reply:", error);
+    }
 }
 
 if (import.meta.main) {
@@ -46,6 +74,12 @@ if (import.meta.main) {
         if (ack === undefined) {
             return;
         }
+
+        // skip if event.text is undefined
+        if (!event.text) {
+            return;
+        }
+
         try {
             handleMessage(event);
         } catch (error) {

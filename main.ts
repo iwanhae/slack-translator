@@ -1,11 +1,12 @@
 import "jsr:@std/dotenv/load";
 import { SocketModeClient } from "npm:@slack/socket-mode";
 import { LogLevel } from "npm:@slack/logger";
-import { chat } from "./ollama.ts";
-import { WebClient } from "npm:@slack/web-api";
-import { shouldTranslate, stripSlackFormatting } from "./utils.ts";
+import { chat } from "./llm.ts";
+import { ChatPostMessageArguments, WebClient } from "npm:@slack/web-api";
+import { shouldTranslate } from "./utils.ts";
 
 const SYSTEM_PROMPT = Deno.readTextFileSync("./prompt.txt");
+const TRANSLATED_BY_BOT_TEXT = "[_translated by the Bot._]";
 
 interface Message {
     type: string;
@@ -29,7 +30,10 @@ const slackBotToken = getEnvOrThrow("SLACK_BOT_TOKEN");
 const webClient = new WebClient(slackBotToken);
 
 async function handleMessage(message: Message) {
-    const text = stripSlackFormatting(message.text);
+    if (message.text.includes(TRANSLATED_BY_BOT_TEXT)) {
+        return;
+    }
+    const text = message.text;
     if (!shouldTranslate(text)) {
         return;
     }
@@ -37,28 +41,33 @@ async function handleMessage(message: Message) {
     console.log("Received message:", text);
     const translation = await chat(
         SYSTEM_PROMPT,
-        `here is the message: ${text}`,
+        text,
     );
     console.log("Translation:", translation);
 
+    const response = `${translation}\n${TRANSLATED_BY_BOT_TEXT}`;
+
+    const msg: ChatPostMessageArguments = {
+        channel: message.channel,
+        text: response,
+        blocks: [
+            {
+                type: "section",
+                text: {
+                    type: "mrkdwn",
+                    text: response,
+                },
+            },
+        ],
+        thread_ts: message.ts,
+        mrkdwn: true,
+        parse: "full",
+    };
+    // Reply to the existing thread if it exists
+    if (message.thread_ts) msg.thread_ts = message.thread_ts;
+
     try {
-        if (message.thread_ts) {
-            // Reply to the existing thread
-            await webClient.chat.postMessage({
-                channel: message.channel,
-                thread_ts: message.thread_ts,
-                text: translation,
-                mrkdwn: true,
-            });
-        } else {
-            // Create a new thread with the translation
-            await webClient.chat.postMessage({
-                channel: message.channel,
-                thread_ts: message.ts,
-                text: translation,
-                mrkdwn: true,
-            });
-        }
+        await webClient.chat.postMessage(msg);
         console.log("Reply sent successfully");
     } catch (error) {
         console.error("Error sending reply:", error);

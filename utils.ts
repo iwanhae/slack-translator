@@ -1,6 +1,7 @@
 import { franc } from "https://esm.sh/franc@6";
 
-export function shouldTranslate(text: string): boolean {
+export function shouldTranslate(rawText: string): boolean {
+    const text = stripSlackFormatting(rawText);
     // check if the message is in english
     const lang = franc(text);
     if (lang === "eng") {

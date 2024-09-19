@@ -29,19 +29,21 @@ The bot skips translation for:
 ## Prerequisites
 
 - Deno runtime
-- Ollama installed locally
+- Ollama installed locally (if not using Groq)
 - Slack App and Bot tokens
+- Groq API key (optional)
 
 ## Setup
 
 1. Clone the repository
-2. Create a `.env` file with your Slack tokens:
+2. Create a `.env` file with your tokens:
    ```
    SLACK_APP_TOKEN=your_app_token_here
    SLACK_BOT_TOKEN=your_bot_token_here
    OLLAMA_HOST=http://localhost:11434
+   GROQ_API_KEY=your_groq_api_key_here  # Optional: If set, Groq will be used instead of Ollama
    ```
-3. Ensure Ollama is running with the Gemma 2 9B model
+3. Ensure Ollama is running with the Gemma 2 9B model (if not using Groq)
 
 ## Usage
 

@@ -39,6 +39,7 @@ The bot skips translation for:
    ```
    SLACK_APP_TOKEN=your_app_token_here
    SLACK_BOT_TOKEN=your_bot_token_here
+   OLLAMA_HOST=http://localhost:11434
    ```
 3. Ensure Ollama is running with the Gemma 2 9B model
 

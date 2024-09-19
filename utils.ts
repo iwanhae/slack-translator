@@ -40,8 +40,8 @@ export function stripSlackFormatting(message: string): string {
     // Remove code blocks (```multiline code```)
     message = message.replace(/```(.*?)```/gs, "$1");
 
-    // Remove Slack links (<https://example.com|description>)
-    message = message.replace(/<([^|]+)\|([^>]+)>/g, "$2");
+    // Convert Slack links to markdown (<https://example.com|description> => [description](https://example.com))
+    message = message.replace(/<([^|]+)\|([^>]+)>/g, "[$2]($1)");
 
     // Remove plain links (<https://example.com>)
     message = message.replace(/<([^>]+)>/g, "$1");

@@ -35,7 +35,10 @@ async function handleMessage(message: Message) {
     }
 
     console.log("Received message:", text);
-    const translation = await chat(SYSTEM_PROMPT, text);
+    const translation = await chat(
+        SYSTEM_PROMPT,
+        `here is the message: ${text}`,
+    );
     console.log("Translation:", translation);
 
     try {

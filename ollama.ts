@@ -8,8 +8,15 @@ export async function chat(system: string, message: string) {
         model: OLLAMA_MODEL,
         system: system,
         prompt: message,
+        stream: true,
     });
-    return response.response;
+
+    let result = "";
+    for await (const chunk of response) {
+        result += chunk.response;
+        Deno.stderr.writeSync(new TextEncoder().encode(chunk.response));
+    }
+    return result;
 }
 
 if (import.meta.main) {

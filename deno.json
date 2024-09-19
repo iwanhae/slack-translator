@@ -1,0 +1,10 @@
+{
+  "tasks": {
+    "dev": "deno run --watch --allow-env --allow-net --allow-sys --allow-read main.ts"
+  },
+  "imports": {
+    "@slack/socket-mode": "npm:@slack/socket-mode@^2.0.1",
+    "@std/assert": "jsr:@std/assert@1",
+    "eventemitter3": "npm:eventemitter3@^5.0.1"
+  }
+}
